@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <title>ダンプ運行カウンター</title>
+
+  <!-- 高齢者向け：大きく・見やすく -->
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #111;
+      color: #fff;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      text-align: center;
+      padding: 1vh;
+      font-size: 3vh;
+      font-weight: bold;
+      border-bottom: 1px solid #333;
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 2vh;
+    }
+
+    .count {
+      font-size: 5vh;
+      color: #ffd700;
+    }
+
+    .time {
+      font-size: 9vh;
+      font-weight: bold;
+    }
+
+    .diff {
+      font-size: 3vh;
+      color: #00ff88;
+    }
+
+    .prev {
+      font-size: 2.5vh;
+      color: #ccc;
+    }
+
+    footer {
+      padding: 2vh;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5vh;
+    }
+
+    button {
+      width: 100%;
+      padding: 2.2vh;
+      font-size: 3vh;
+      font-weight: bold;
+      border-radius: 1.2vh;
+      border: none;
+    }
+
+    .send {
+      background: #00aa55;
+      color: #fff;
+    }
+
+    .sub {
+      background: #333;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    今日の打刻状況
+  </header>
+
+  <main>
+    <div class="count">第 5 回目</div>
+    <div class="time">15:00</div>
+    <div class="diff">前回から 90 分</div>
+    <div class="prev">前回：13:30</div>
+  </main>
+
+  <footer>
+    <button class="send">本日の業務を終了し送信</button>
+    <button class="sub">今日の履歴を見る</button>
+    <button class="sub">過去の履歴を見る</button>
+  </footer>
+
+</body>
+</html>
