@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<!--
+  初回登録画面
+  ・名前＋電話番号のみ
+  ・高齢ドライバー向け
+  ・この画面は初回のみ表示
+-->
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>初回登録｜ダンプ運行カウンター</title>
+
+  <style>
+    /* =============================
+       基本リセット
+    ============================= */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      height: 100vh;
+      width: 100vw;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #111;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* =============================
+       ヘッダー
+    ============================= */
+    header {
+      height: 8vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 3vh;
+      font-weight: bold;
+      border-bottom: 1px solid #333;
+    }
+
+    /* =============================
+       メイン
+    ============================= */
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 3vh;
+      padding: 4vh;
+    }
+
+    label {
+      font-size: 2.8vh;
+      margin-bottom: 1vh;
+    }
+
+    input {
+      width: 100%;
+      padding: 2vh;
+      font-size: 3vh;
+      border-radius: 1vh;
+      border: none;
+    }
+
+    .note {
+      font-size: 2.2vh;
+      color: #ccc;
+    }
+
+    /* =============================
+       フッター
+    ============================= */
+    footer {
+      padding: 2vh;
+    }
+
+    button {
+      width: 100%;
+      padding: 2.5vh;
+      font-size: 3vh;
+      font-weight: bold;
+      border-radius: 1.2vh;
+      border: none;
+      background: #00aa55;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== ヘッダー ===== -->
+  <header>
+    初回登録
+  </header>
+
+  <!-- ===== メイン ===== -->
+  <main>
+    <div>
+      <label>名前</label>
+      <input type="text" placeholder="例：山田 太郎">
+    </div>
+
+    <div>
+      <label>電話番号</label>
+      <input type="tel" inputmode="numeric" placeholder="ハイフンなし">
+    </div>
+
+    <div class="note">
+      ※ この情報は最初の1回だけ登録します
+    </div>
+  </main>
+
+  <!-- ===== フッター ===== -->
+  <footer>
+    <button>登録して開始する</button>
+  </footer>
+
+</body>
+</html>
