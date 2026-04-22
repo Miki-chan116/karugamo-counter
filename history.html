@@ -1,19 +1,20 @@
 <!DOCTYPE html>
 <!--
-  日別履歴画面（history.html）
+  日별履歴画面（history.html）
   ・過去の日ごとの回数を一覧表示
   ・自分のデータのみ確認
-  ・日付タップで当日詳細（today.html）へ遷移
+  ・日付タップで詳細画面（today.html流用）に遷移する想定
 -->
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport"
-        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>日別履歴｜ダンプ運行カウンター</title>
 
   <style>
-    /* 基本リセット */
+    /* =============================
+       基本リセット
+    ============================= */
     * {
       margin: 0;
       padding: 0;
@@ -30,7 +31,9 @@
       flex-direction: column;
     }
 
-    /* ヘッダー */
+    /* =============================
+       ヘッダー
+    ============================= */
     header {
       height: 8vh;
       display: flex;
@@ -41,7 +44,9 @@
       border-bottom: 1px solid #333;
     }
 
-    /* 日別リスト */
+    /* =============================
+       日別リスト
+    ============================= */
     main {
       flex: 1;
       padding: 2vh;
@@ -55,7 +60,6 @@
       padding: 2.5vh;
       border-bottom: 1px solid #333;
       font-size: 2.8vh;
-      cursor: pointer;
     }
 
     .date {
@@ -66,7 +70,9 @@
       color: #ffd700;
     }
 
-    /* フッター */
+    /* =============================
+       フッター
+    ============================= */
     footer {
       padding: 2vh;
     }
@@ -85,34 +91,35 @@
 </head>
 <body>
 
-  <!-- ヘッダー -->
+  <!-- ===== ヘッダー ===== -->
   <header>
     日別履歴
   </header>
 
-  <!-- メイン -->
+  <!-- ===== メイン ===== -->
   <main>
 
-    today.html
+    <!-- 最新日付 -->
+    <div class="day" onclick="location.href='today.html'"> 
       <div class="date">2026/04/22</div>
       <div class="count">6 回</div>
     </div>
 
-    today.html
+    <div class="day" onclick="location.href='today.html'">
       <div class="date">2026/04/21</div>
       <div class="count">5 回</div>
     </div>
 
-    today.html
+    <div class="day" onclick="location.href='today.html'">
       <div class="date">2026/04/20</div>
       <div class="count">4 回</div>
     </div>
 
   </main>
 
-  <!-- フッター -->
+  <!-- ===== フッター ===== -->
   <footer>
-    index.html戻る</button>
+    <button onclick="location.href='index.html'">戻る</button>
   </footer>
 
 </body>
