@@ -79,7 +79,8 @@ header button {
 }
 
 /* ===== フッター ===== */
-footer {
+/* jun */
+/* footer {
   position:fixed;
   bottom:0;
   left:0;
@@ -93,8 +94,68 @@ footer button {
   flex:1;
   font-size:18px;
   border:none;
+} */
+
+footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 132px;
+  background: var(--white);
+  display: flex;
+  flex-direction: column;
+  z-index: 20;
 }
 
+.footer-row {
+  display: flex;
+  width: 100%;
+}
+
+.footer-row-main {
+  height: 68px;
+}
+
+.footer-row-sub {
+  height: 64px;
+}
+
+footer button {
+  width: 100%;
+  height: 100%;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+  pointer-events: auto;
+  touch-action: manipulation;
+}
+
+.footer-row-sub button {
+  flex: 1;
+  font-size: 18px;
+}
+
+.stamp-btn {
+  background: #ffffff;
+  color: #000;
+  font-size: 24px;
+}
+
+.edit-btn {
+  background: #ddd;
+  color: #000;
+}
+
+.send-btn {
+  background: var(--accent-orange);
+  color: #000;
+}
+
+button:active {
+  transform: scale(0.98);
+  opacity: 0.85;
+}
 .edit-btn {
   background:#ddd;
   font-weight:bold;
@@ -156,8 +217,9 @@ main {
   font-size:18px;
 }
 
+/* jun */
 /* ===== 打刻ボタン ===== */
-.stamp-btn {
+/* .stamp-btn {
   position:sticky;
   bottom:80px;
   margin:32px auto 0;
@@ -165,14 +227,14 @@ main {
   font-size:22px;
   font-weight:bold;
   padding:14px 24px;
-  background-color: rgba(255, 255, 255, 0.85); /* ← 少し透かす */
+  background-color: rgba(255, 255, 255, 0.85);
   color:#000;
   border:none;
-}
+} */
 
-.btn {
+/* .btn {
   border-radius: 12px;
-}
+} */
 
 </style>
 </head>
@@ -209,16 +271,27 @@ main {
     </div>
   </div>
 
-  <button class="stamp-btn btn">➕ 打刻する</button>
+  <!-- <button class="stamp-btn btn">➕ 打刻する</button> jun-->
 
 </main>
 
-<footer>
+<!-- jun -->
+<!-- <footer>
   <button class="edit-btn">修正する</button>
   <button class="send-btn">📤 データを送る</button>
+</footer> -->
+<footer>
+  <div class="footer-row footer-row-main">
+    <button class="stamp-btn" onclick="addStamp()">➕ 打刻する</button>
+  </div>
+
+  <div class="footer-row footer-row-sub">
+    <button class="edit-btn">修正する</button>
+    <button class="send-btn" onclick="sendLogs()">📤 データを送る</button>
+  </div>
 </footer>
 
-<script>
+<!-- <script>
 const dateEl = document.querySelector('.date');
 
 const now = new Date();
@@ -227,6 +300,168 @@ const month = now.getMonth() + 1;
 const day = now.getDate();
 const weekday = ['日','月','火','水','木','金','土'][now.getDay()];
 dateEl.textContent = `🦆 ${year}年${month}月${day}日（${weekday}）`;
+</script> -->
+<script>
+  const STORAGE_KEY = 'karugamo_pending_logs';
+
+  const dateEl = document.querySelector('.date');
+  const mainEl = document.querySelector('main');
+
+  function updateDateHeader() {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = now.getMonth() + 1;
+    const day = now.getDate();
+    const weekday = ['日','月','火','水','木','金','土'][now.getDay()];
+    dateEl.textContent = `🦆 ${year}年${month}月${day}日（${weekday}）`;
+  }
+
+  function loadLogs() {
+    const json = localStorage.getItem(STORAGE_KEY);
+    if (!json) return [];
+
+    try {
+      return JSON.parse(json);
+    } catch (e) {
+      console.error(e);
+      return [];
+    }
+  }
+
+  function saveLogs(logs) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(logs));
+  }
+
+  function clearLogs() {
+    localStorage.removeItem(STORAGE_KEY);
+  }
+
+  function formatTime(date) {
+    const h = String(date.getHours()).padStart(2, '0');
+    const m = String(date.getMinutes()).padStart(2, '0');
+    return `${h}:${m}`;
+  }
+
+  function addStamp() {
+    const logs = loadLogs();
+    const now = new Date();
+
+    const previousLog = logs.length > 0 ? logs[logs.length - 1] : null;
+
+    const intervalMs = previousLog
+      ? now.getTime() - Number(previousLog.recorded_at_ms)
+      : '';
+
+    const log = {
+      id: String(Date.now()),
+      driver_name: '',
+      driver_phone: '',
+      device_id: getDeviceId(),
+      press_count: logs.length + 1,
+      interval_ms: intervalMs,
+      recorded_at_ms: now.getTime(),
+      recorded_at: formatDateTimeJst(now),
+      display_time: formatTime(now),
+      memo: ''
+    };
+
+    logs.push(log);
+    saveLogs(logs);
+    renderLogs();
+  }
+
+  function getDeviceId() {
+    let deviceId = localStorage.getItem('karugamo_device_id');
+
+    if (!deviceId) {
+      deviceId = 'device_' + Date.now();
+      localStorage.setItem('karugamo_device_id', deviceId);
+    }
+
+    return deviceId;
+  }
+
+  function renderLogs() {
+    const logs = loadLogs();
+
+    const oldLogs = mainEl.querySelectorAll('.log');
+    oldLogs.forEach(el => el.remove());
+
+    const displayLogs = [...logs].reverse();
+
+    displayLogs.forEach((log, index) => {
+      const div = document.createElement('div');
+      div.className = index === 0 ? 'log latest' : 'log';
+
+      const elapsedText = getElapsedText(log, logs);
+
+      div.innerHTML = `
+        <div class="time-row">
+          <div class="time">${log.display_time}</div>
+          <div class="count">${log.press_count}</div>
+        </div>
+        ${elapsedText ? `<div class="elapsed">${elapsedText}</div>` : ''}
+      `;
+
+      mainEl.appendChild(div);
+      
+    });
+  }
+
+  function getElapsedText(log, logs) {
+    const index = logs.findIndex(item => item.id === log.id);
+
+    if (index <= 0) {
+      return '';
+    }
+
+    const previousLog = logs[index - 1];
+    const currentTime = Number(log.recorded_at_ms);
+    const previousTime = Number(previousLog.recorded_at_ms);
+
+    const diffMin = Math.round((currentTime - previousTime) / 1000 / 60);
+
+    return `${diffMin}分`;
+  }
+
+  function sendLogs() {
+    const logs = loadLogs();
+
+    if (logs.length === 0) {
+      alert('送信するデータがありません');
+      return;
+    }
+
+    if (!confirm(`${logs.length}件のデータを送信しますか？`)) {
+      return;
+    }
+
+    google.script.run
+      .withSuccessHandler(function(result) {
+        clearLogs();
+        renderLogs();
+        alert(`${result.saved_count}件送信しました`);
+      })
+      .withFailureHandler(function(error) {
+        console.error(error);
+        alert('送信に失敗しました。データは残っています。');
+      })
+      .saveLogsFromWeb(logs);
+  }
+
+  function formatDateTimeJst(date) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const hour = String(date.getHours()).padStart(2, '0');
+    const minute = String(date.getMinutes()).padStart(2, '0');
+    const second = String(date.getSeconds()).padStart(2, '0');
+
+    return `${year}/${month}/${day} ${hour}:${minute}:${second}`;
+  }
+
+  updateDateHeader();
+  renderLogs();
 </script>
 
 </body>
