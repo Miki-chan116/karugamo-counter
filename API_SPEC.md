@@ -53,6 +53,7 @@ application/json
 | press_count  | 押下回数             |
 | interval_ms  | 前回押下からの経過時間（ミリ秒） |
 | recorded_at  | スマホ側で記録した時刻      |
+| created_at   | 送信した時刻      |
 | memo         | メモ               |
 
 
