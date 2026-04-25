@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -57,7 +56,7 @@ class _MyHomePageState extends State<MyHomePage> {
         'press_count': _pressCount,
         'interval_ms': intervalMs,
         'recorded_at': now.toIso8601String(),
-        'memo': 'Flutter一括送信テスト',
+        'memo': 'Flutter一括送信テスト2',
       });
 
       _lastPressedAt = now;
@@ -89,20 +88,20 @@ class _MyHomePageState extends State<MyHomePage> {
           'logs': _unsentLogs,
         }),
       );
+      
 
-      final result = jsonDecode(response.body);
-
-      if (result['status'] == 'success') {
-        final savedCount = result['saved_count'];
+      if (response.statusCode == 200 || response.statusCode == 302) {
+        final sentCount = _unsentLogs.length;
 
         setState(() {
           _unsentLogs.clear();
         });
 
-        _showMessage('$savedCount件送信しました');
+        _showMessage('$sentCount件送信しました');
       } else {
-        _showMessage('送信失敗: ${result['message']}');
+        _showMessage('送信失敗: ${response.statusCode}');
       }
+
     } catch (e) {
       _showMessage('送信エラー: $e');
     } finally {
