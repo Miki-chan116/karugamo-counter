@@ -25,7 +25,7 @@ function doPost(e) {
       log.device_id || '',
       log.press_count || '',
       log.interval_ms || '',
-      log.recorded_at || '',
+      log.received_at || '',
       createdAt,
       log.memo || ''
     ]);
@@ -99,7 +99,7 @@ function saveLogsFromWeb(logs) {
       log.device_id || '',
       log.press_count || '',
       log.interval_ms || '',
-      log.recorded_at || '',
+      log.received_at || '',
       createdAt,
       log.memo || ''
     ]);

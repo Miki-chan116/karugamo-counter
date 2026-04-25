@@ -349,25 +349,24 @@ dateEl.textContent = `🦆 ${year}年${month}月${day}日（${weekday}）`;
     const previousLog = logs.length > 0 ? logs[logs.length - 1] : null;
 
     const intervalMs = previousLog
-      ? now.getTime() - Number(previousLog.recorded_at_ms)
+      ? now.getTime() - Number(previousLog.received_at_ms)
       : '';
 
     const log = {
       id: String(Date.now()),
+      source: 'manual',
       driver_name: '',
       driver_phone: '',
       device_id: getDeviceId(),
       press_count: logs.length + 1,
       interval_ms: intervalMs,
-      recorded_at_ms: now.getTime(),
-      recorded_at: formatDateTimeJst(now),
+      received_at_ms: now.getTime(),
+      received_at: formatDateTimeJst(now),
       display_time: formatTime(now),
       memo: ''
     };
 
-    logs.push(log);
-    saveLogs(logs);
-    renderLogs();
+    addPendingLog(log);
   }
 
   function getDeviceId() {
@@ -416,8 +415,12 @@ dateEl.textContent = `🦆 ${year}年${month}月${day}日（${weekday}）`;
     }
 
     const previousLog = logs[index - 1];
-    const currentTime = Number(log.recorded_at_ms);
-    const previousTime = Number(previousLog.recorded_at_ms);
+    const currentTime = Number(log.received_at_ms);
+    const previousTime = Number(previousLog.received_at_ms);
+
+    if (!currentTime || !previousTime) {
+      return '';
+    }
 
     const diffMin = Math.round((currentTime - previousTime) / 1000 / 60);
 
@@ -458,6 +461,43 @@ dateEl.textContent = `🦆 ${year}年${month}月${day}日（${weekday}）`;
     const second = String(date.getSeconds()).padStart(2, '0');
 
     return `${year}/${month}/${day} ${hour}:${minute}:${second}`;
+  }
+
+  function addPendingLog(logData) {
+    const logs = loadLogs();
+    logs.push(logData);
+    saveLogs(logs);
+    renderLogs();
+  }
+
+  function receiveAtomLog(atomData) {
+    const now = new Date();
+
+    const log = {
+      id: String(Date.now()),
+      source: 'atom',
+      driver_name: '',
+      driver_phone: '',
+      device_id: atomData.device_id || '',
+      press_count: atomData.press_count || '',
+      interval_ms: atomData.interval_ms || '',
+      received_at_ms: now.getTime(),
+      received_at: formatDateTimeJst(now),
+      display_time: formatTime(now),
+      memo: ''
+    };
+
+    addPendingLog(log);
+  }
+
+  function receiveAtomNotifyJson(jsonText) {
+    try {
+      const atomData = JSON.parse(jsonText);
+      receiveAtomLog(atomData);
+    } catch (e) {
+      console.error('ATOM Lite JSON parse error:', e);
+      alert('ATOM Liteからのデータ形式が不正です');
+    }
   }
 
   updateDateHeader();
