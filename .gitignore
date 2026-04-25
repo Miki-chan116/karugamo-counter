@@ -1,0 +1,6 @@
+# Flutter
+.dart_tool/
+build/
+test_app/.dart_tool/
+test_app/build/
+.clasp.json
