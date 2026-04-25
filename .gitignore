@@ -1,1 +1,5 @@
-/test_app
+# Flutter
+.dart_tool/
+build/
+test_app/.dart_tool/
+test_app/build/
